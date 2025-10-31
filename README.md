@@ -23,6 +23,10 @@ A multimodal hybrid AI application combining on-device AI (Gemini Nano) with clo
 - Advanced analytics dashboard with statistical visualizations
 - Offline-first architecture
 
+- Source Code- 
+- Video Demo- https://youtu.be/EEotO37Cb8c
+- Active Site (with mock data)- 
+
 ## Technology Stack
 
 - Backend: Python Flask, TensorFlow Lite
