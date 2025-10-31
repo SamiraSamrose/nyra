@@ -23,9 +23,9 @@ A multimodal hybrid AI application combining on-device AI (Gemini Nano) with clo
 - Advanced analytics dashboard with statistical visualizations
 - Offline-first architecture
 
-- Source Code- 
+- Source Code- https://github.com/SamiraSamrose/nyra
 - Video Demo- https://youtu.be/EEotO37Cb8c
-- Active Site (with mock data)- 
+- Active Site (with mock data)- https://samirasamrose.github.io/nyra/
 
 ## Technology Stack
 
