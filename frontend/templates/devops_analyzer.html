@@ -1,0 +1,124 @@
+
+<!-- ============================================
+     frontend/templates/devops_analyzer.html
+     ============================================ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Analyzer - NYRA</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1 class="logo-text">NYRA</h1>
+                    <p class="logo-subtitle">DevOps Analyzer</p>
+                </div>
+                <nav class="navigation">
+                    <a href="/" class="nav-link">Home</a>
+                    <a href="/dashboard" class="nav-link">Dashboard</a>
+                    <a href="/analytics" class="nav-link">Analytics</a>
+                    <a href="/sql-optimizer" class="nav-link">SQL Optimizer</a>
+                </nav>
+            </div>
+        </header>
+
+        <section class="dashboard-hero">
+            <h2>DevOps Configuration Analyzer</h2>
+            <p>Analyze Terraform, Kubernetes, Docker, and GCP configurations with AI</p>
+        </section>
+
+        <section style="background: white; padding: 2rem; border-radius: 1rem; margin: 2rem 0;">
+            <h3 style="margin-bottom: 1.5rem;">Configuration Analysis</h3>
+            
+            <div style="margin-bottom: 1rem;">
+                <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Configuration Type</label>
+                <select 
+                    id="configType" 
+                    style="width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 0.5rem; font-size: 0.875rem;"
+                >
+                    <option value="terraform">Terraform</option>
+                    <option value="kubernetes">Kubernetes YAML</option>
+                    <option value="docker">Dockerfile</option>
+                    <option value="gcp-cli">GCP CLI Script</option>
+                </select>
+            </div>
+            
+            <div class="sql-editor">
+                <textarea 
+                    id="devopsCode" 
+                    placeholder="Paste your configuration code here..."
+                    style="width: 100%; min-height: 300px; background: #1e293b; border: none; color: #e2e8f0; font-family: monospace; font-size: 14px; padding: 1rem; border-radius: 0.5rem;"
+>resource "google_compute_instance" "default" {
+  name         = "test"
+  machine_type = "n1-standard-1"
+  zone         = "us-central1-a"
+
+  boot_disk {
+    initialize_params {
+      image = "debian-cloud/debian-11"
+    }
+  }
+
+  network_interface {
+    network = "default"
+  }
+}</textarea>
+            </div>
+            
+            <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                <button 
+                    onclick="analyzeDevOps()" 
+                    style="padding: 0.75rem 2rem; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; border: none; border-radius: 0.5rem; font-weight: 600; cursor: pointer;"
+                >
+                    Analyze Configuration
+                </button>
+                <button 
+                    onclick="document.getElementById('devopsCode').value = ''" 
+                    style="padding: 0.75rem 2rem; background: #64748b; color: white; border: none; border-radius: 0.5rem; font-weight: 600; cursor: pointer;"
+                >
+                    Clear
+                </button>
+            </div>
+        </section>
+
+        <section id="analysisResults" style="margin: 2rem 0;">
+            <!-- Results will appear here -->
+        </section>
+
+        <section style="background: white; padding: 2rem; border-radius: 1rem; margin: 2rem 0;">
+            <h3 style="margin-bottom: 1rem;">Analysis Capabilities</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <div style="padding: 1rem; background: linear-gradient(135deg, #fef3c7, #fde68a); border-radius: 0.5rem;">
+                    <h4 style="margin-bottom: 0.5rem;">Security Scan</h4>
+                    <p style="font-size: 0.875rem;">Detect vulnerabilities</p>
+                </div>
+                <div style="padding: 1rem; background: linear-gradient(135deg, #dbeafe, #bfdbfe); border-radius: 0.5rem;">
+                    <h4 style="margin-bottom: 0.5rem;">Best Practices</h4>
+                    <p style="font-size: 0.875rem;">Industry standards</p>
+                </div>
+                <div style="padding: 1rem; background: linear-gradient(135deg, #d1fae5, #a7f3d0); border-radius: 0.5rem;">
+                    <h4 style="margin-bottom: 0.5rem;">Cost Optimization</h4>
+                    <p style="font-size: 0.875rem;">Reduce cloud costs</p>
+                </div>
+                <div style="padding: 1rem; background: linear-gradient(135deg, #e9d5ff, #d8b4fe); border-radius: 0.5rem;">
+                    <h4 style="margin-bottom: 0.5rem;">Performance</h4>
+                    <p style="font-size: 0.875rem;">Optimize resources</p>
+                </div>
+                <div style="padding: 1rem; background: linear-gradient(135deg, #fed7aa, #fdba74); border-radius: 0.5rem;">
+                    <h4 style="margin-bottom: 0.5rem;">Scalability</h4>
+                    <p style="font-size: 0.875rem;">Auto-scaling tips</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,300 @@
+<!-- ============================================ -->
+<!-- frontend/templates/analytics.html -->
+<!-- ============================================ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - NYRA</title>
+    <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="../static/css/dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1 class="logo-text">NYRA</h1>
+                    <p class="logo-subtitle">Analytics</p>
+                </div>
+                <nav class="navigation">
+                    <a href="index.html" class="nav-link active">Home</a>
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="analytics.html" class="nav-link">Analytics</a>
+                    <a href="prompt-builder.html" class="nav-link">Prompt Builder</a>
+                </nav>
+            </div>
+        </header>
+
+        <section class="analytics-hero">
+            <h2>Advanced Analytics</h2>
+            <p>Deep insights into AI performance and usage patterns</p>
+        </section>
+
+        <section class="analytics-filters">
+            <select class="filter-select" id="timeRange">
+                <option value="24h">Last 24 Hours</option>
+                <option value="7d" selected>Last 7 Days</option>
+                <option value="30d">Last 30 Days</option>
+                <option value="90d">Last 90 Days</option>
+            </select>
+            <button class="filter-button" onclick="refreshAnalytics()">Refresh Data</button>
+        </section>
+
+        <section class="analytics-grid">
+            <div class="analytics-card">
+                <h3>Performance Metrics</h3>
+                <canvas id="performanceChart"></canvas>
+                <div class="analytics-stats">
+                    <div class="stat">
+                        <span class="stat-label">Avg Response</span>
+                        <span class="stat-value">0.72s</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Success Rate</span>
+                        <span class="stat-value">99.2%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analytics-card">
+                <h3>Cost Analysis</h3>
+                <canvas id="costChart"></canvas>
+                <div class="analytics-stats">
+                    <div class="stat">
+                        <span class="stat-label">Total Saved</span>
+                        <span class="stat-value">$1,247</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Cloud Costs</span>
+                        <span class="stat-value">$89</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="analytics-grid">
+            <div class="analytics-card full-width">
+                <h3>User Journey Flow</h3>
+                <div id="flowDiagram" class="flow-container"></div>
+            </div>
+        </section>
+
+        <section class="analytics-grid">
+            <div class="analytics-card">
+                <h3>API Efficiency</h3>
+                <canvas id="efficiencyRadar"></canvas>
+            </div>
+
+            <div class="analytics-card">
+                <h3>Usage Heatmap</h3>
+                <div id="heatmap" class="heatmap-container"></div>
+            </div>
+        </section>
+
+        <section class="insights-section">
+            <h3>AI-Generated Insights</h3>
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <div class="insight-icon">📊</div>
+                    <div class="insight-content">
+                        <h4>Peak Usage Pattern</h4>
+                        <p>On-device operations peak between 2PM-4PM, suggesting optimal time for maintenance windows.</p>
+                    </div>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-icon">💰</div>
+                    <div class="insight-content">
+                        <h4>Cost Optimization</h4>
+                        <p>65% of operations run on-device, resulting in 78% cost reduction vs. cloud-only approach.</p>
+                    </div>
+                </div>
+                <div class="insight-card">
+                    <div class="insight-icon">⚡</div>
+                    <div class="insight-content">
+                        <h4>Performance Gain</h4>
+                        <p>Hybrid AI strategy improves response time by 45% while maintaining 98% accuracy.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="/static/js/api_client.js"></script>
+    <script src="/static/js/visualizations.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initializePerformanceChart();
+            initializeCostChart();
+            initializeEfficiencyRadar();
+            initializeFlowDiagram();
+            initializeHeatmap();
+        });
+
+        function initializePerformanceChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Response Time (ms)',
+                        data: [650, 720, 680, 590, 640, 710, 675],
+                        borderColor: '#3b82f6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        function initializeCostChart() {
+            const ctx = document.getElementById('costChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    datasets: [{
+                        label: 'On-Device Savings',
+                        data: [285, 312, 298, 352],
+                        backgroundColor: '#10b981'
+                    }, {
+                        label: 'Cloud Costs',
+                        data: [18, 22, 21, 28],
+                        backgroundColor: '#ef4444'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'bottom' } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        function initializeEfficiencyRadar() {
+            const ctx = document.getElementById('efficiencyRadar').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Speed', 'Accuracy', 'Privacy', 'Cost', 'Offline'],
+                    datasets: [{
+                        label: 'NYRA Performance',
+                        data: [95, 98, 100, 92, 85],
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.2)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { r: { beginAtZero: true, max: 100 } }
+                }
+            });
+        }
+
+        function initializeFlowDiagram() {
+            const container = document.getElementById('flowDiagram');
+            const svg = d3.select(container)
+                .append('svg')
+                .attr('width', '100%')
+                .attr('height', 300);
+
+            const nodes = [
+                { id: 1, x: 100, y: 150, label: 'User Input' },
+                { id: 2, x: 300, y: 100, label: 'Gemini Nano' },
+                { id: 3, x: 300, y: 200, label: 'Gemini Pro' },
+                { id: 4, x: 500, y: 150, label: 'Result' }
+            ];
+
+            svg.selectAll('line')
+                .data([
+                    { from: nodes[0], to: nodes[1] },
+                    { from: nodes[0], to: nodes[2] },
+                    { from: nodes[1], to: nodes[3] },
+                    { from: nodes[2], to: nodes[3] }
+                ])
+                .enter()
+                .append('line')
+                .attr('x1', d => d.from.x)
+                .attr('y1', d => d.from.y)
+                .attr('x2', d => d.to.x)
+                .attr('y2', d => d.to.y)
+                .attr('stroke', '#cbd5e1')
+                .attr('stroke-width', 2);
+
+            svg.selectAll('circle')
+                .data(nodes)
+                .enter()
+                .append('circle')
+                .attr('cx', d => d.x)
+                .attr('cy', d => d.y)
+                .attr('r', 30)
+                .attr('fill', '#3b82f6');
+
+            svg.selectAll('text')
+                .data(nodes)
+                .enter()
+                .append('text')
+                .attr('x', d => d.x)
+                .attr('y', d => d.y + 5)
+                .attr('text-anchor', 'middle')
+                .attr('fill', 'white')
+                .attr('font-size', '12px')
+                .text(d => d.label);
+        }
+
+        function initializeHeatmap() {
+            const container = document.getElementById('heatmap');
+            const data = [];
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const hours = Array.from({length: 24}, (_, i) => i);
+
+            days.forEach((day, dayIdx) => {
+                hours.forEach(hour => {
+                    data.push({
+                        day: dayIdx,
+                        hour: hour,
+                        value: Math.floor(Math.random() * 100)
+                    });
+                });
+            });
+
+            const svg = d3.select(container)
+                .append('svg')
+                .attr('width', '100%')
+                .attr('height', 200);
+
+            const cellWidth = 25;
+            const cellHeight = 25;
+
+            svg.selectAll('rect')
+                .data(data)
+                .enter()
+                .append('rect')
+                .attr('x', d => d.hour * cellWidth)
+                .attr('y', d => d.day * cellHeight)
+                .attr('width', cellWidth - 1)
+                .attr('height', cellHeight - 1)
+                .attr('fill', d => {
+                    const intensity = d.value / 100;
+                    return `rgba(59, 130, 246, ${intensity})`;
+                });
+        }
+
+        function refreshAnalytics() {
+            console.log('Refreshing analytics data...');
+            location.reload();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NYRA - Neural Yielding Resilient Assistant</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        
+        .header { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .logo { font-size: 32px; font-weight: 700; color: #2563eb; margin-bottom: 5px; }
+        .tagline { color: #64748b; font-size: 14px; }
+        
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; background: white; padding: 10px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow-x: auto; }
+        .tab { padding: 12px 24px; border-radius: 8px; background: #f1f5f9; border: none; cursor: pointer; font-weight: 600; white-space: nowrap; }
+        .tab.active { background: #2563eb; color: white; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .stat-value { font-size: 32px; font-weight: 700; color: #2563eb; }
+        .stat-label { color: #64748b; font-size: 14px; margin-top: 5px; }
+        
+        .tools-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; }
+        .tool-card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .tool-title { font-size: 20px; font-weight: 600; margin-bottom: 10px; color: #1e293b; }
+        .tool-description { color: #64748b; margin-bottom: 15px; font-size: 14px; }
+        
+        textarea, input, select { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-family: inherit; margin-bottom: 10px; }
+        textarea { min-height: 100px; resize: vertical; }
+        button { width: 100%; padding: 12px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        button:hover { background: #1e40af; }
+        
+        .output { background: #f1f5f9; border-radius: 8px; padding: 15px; min-height: 80px; margin-top: 10px; font-size: 14px; white-space: pre-wrap; }
+        .output:empty::before { content: 'Results will appear here...'; color: #94a3b8; }
+        
+        .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; }
+        .chart-container { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        
+        .code-editor { background: #1e293b; border-radius: 8px; padding: 15px; margin-bottom: 10px; }
+        .code-editor textarea { background: transparent; color: #e2e8f0; font-family: monospace; border: none; }
+        
+        .recommendation-item { background: #f1f5f9; padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #2563eb; }
+        .prompt-block { background: #f1f5f9; border-radius: 8px; padding: 15px; margin-bottom: 10px; }
+        
+        .spinner { border: 3px solid #f3f4f6; border-top: 3px solid #2563eb; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 20px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">NYRA</div>
+            <div class="tagline">Neural Yielding Resilient Assistant</div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('home')">Home</button>
+            <button class="tab" onclick="switchTab('dashboard')">Dashboard</button>
+            <button class="tab" onclick="switchTab('analytics')">Analytics</button>
+            <button class="tab" onclick="switchTab('sql')">SQL Optimizer</button>
+            <button class="tab" onclick="switchTab('devops')">DevOps Analyzer</button>
+            <button class="tab" onclick="switchTab('prompt')">Prompt Builder</button>
+        </div>
+
+        <!-- HOME TAB -->
+        <div id="home" class="tab-content active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalOps">1,247</div>
+                    <div class="stat-label">Total Operations</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avgTime">0.7s</div>
+                    <div class="stat-label">Avg Response Time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="privacy">98%</div>
+                    <div class="stat-label">Privacy Score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="savings">$1,284</div>
+                    <div class="stat-label">Cost Savings</div>
+                </div>
+            </div>
+
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-title">Prompt API</div>
+                    <div class="tool-description">Generate text using Gemini Nano and Pro</div>
+                    <textarea id="promptInput" placeholder="Enter your prompt..."></textarea>
+                    <button onclick="executePrompt()">Generate</button>
+                    <div class="output" id="promptOutput"></div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-title">Summarizer API</div>
+                    <div class="tool-description">Intelligent text summarization</div>
+                    <textarea id="summarizerInput" placeholder="Paste text to summarize..."></textarea>
+                    <select id="summaryLength">
+                        <option value="short">Short</option>
+                        <option value="medium">Medium</option>
+                        <option value="long">Long</option>
+                    </select>
+                    <button onclick="executeSummarizer()">Summarize</button>
+                    <div class="output" id="summarizerOutput"></div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-title">Translator API</div>
+                    <div class="tool-description">Multi-language translation</div>
+                    <textarea id="translatorInput" placeholder="Enter text to translate..."></textarea>
+                    <select id="targetLanguage">
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                        <option value="ja">Japanese</option>
+                        <option value="zh">Chinese</option>
+                    </select>
+                    <button onclick="executeTranslator()">Translate</button>
+                    <div class="output" id="translatorOutput"></div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-title">Writer API</div>
+                    <div class="tool-description">AI content generation</div>
+                    <input type="text" id="writerContext" placeholder="Topic or context...">
+                    <select id="writerTone">
+                        <option value="professional">Professional</option>
+                        <option value="casual">Casual</option>
+                        <option value="creative">Creative</option>
+                        <option value="technical">Technical</option>
+                    </select>
+                    <button onclick="executeWriter()">Write</button>
+                    <div class="output" id="writerOutput"></div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-title">Proofreader API</div>
+                    <div class="tool-description">Grammar and style checking</div>
+                    <textarea id="proofreaderInput" placeholder="Paste text to proofread..."></textarea>
+                    <button onclick="executeProofreader()">Check</button>
+                    <div class="output" id="proofreaderOutput"></div>
+                </div>
+
+                <div class="tool-card">
+                    <div class="tool-title">Rewriter API</div>
+                    <div class="tool-description">Text improvement and rewriting</div>
+                    <textarea id="rewriterInput" placeholder="Enter text to rewrite..."></textarea>
+                    <select id="rewriteGoal">
+                        <option value="improve">Improve</option>
+                        <option value="simplify">Simplify</option>
+                        <option value="formalize">Formalize</option>
+                        <option value="shorten">Shorten</option>
+                    </select>
+                    <button onclick="executeRewriter()">Rewrite</button>
+                    <div class="output" id="rewriterOutput"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DASHBOARD TAB -->
+        <div id="dashboard" class="tab-content">
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <canvas id="operationsChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="distributionChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="apiUsageChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANALYTICS TAB -->
+        <div id="analytics" class="tab-content">
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="costChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="efficiencyChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- SQL OPTIMIZER TAB -->
+        <div id="sql" class="tab-content">
+            <div class="tool-card">
+                <div class="tool-title">SQL Query Optimizer</div>
+                <div class="tool-description">Analyze and optimize BigQuery SQL queries</div>
+                <div class="code-editor">
+                    <textarea id="sqlQuery" placeholder="SELECT * FROM users WHERE...">SELECT * FROM users WHERE created_at > '2024-01-01' ORDER BY created_at DESC</textarea>
+                </div>
+                <button onclick="optimizeSQL()">Analyze Query</button>
+                <div id="sqlResults" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+
+        <!-- DEVOPS ANALYZER TAB -->
+        <div id="devops" class="tab-content">
+            <div class="tool-card">
+                <div class="tool-title">DevOps Configuration Analyzer</div>
+                <div class="tool-description">Review Terraform, Kubernetes, Docker configurations</div>
+                <select id="configType">
+                    <option value="terraform">Terraform</option>
+                    <option value="kubernetes">Kubernetes</option>
+                    <option value="docker">Dockerfile</option>
+                    <option value="gcp">GCP CLI</option>
+                </select>
+                <div class="code-editor">
+                    <textarea id="devopsCode" placeholder="Paste configuration...">resource "google_compute_instance" "default" {
+  name = "test"
+  machine_type = "n1-standard-1"
+  zone = "us-central1-a"
+}</textarea>
+                </div>
+                <button onclick="analyzeDevOps()">Analyze Configuration</button>
+                <div id="devopsResults" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+
+        <!-- PROMPT BUILDER TAB -->
+        <div id="prompt" class="tab-content">
+            <div class="tool-card">
+                <div class="tool-title">Prompt Chain Builder</div>
+                <div class="tool-description">Build complex multi-step prompts</div>
+                <div id="promptBlocks"></div>
+                <button onclick="addPromptBlock()" style="background: #64748b; margin-bottom: 15px;">Add Block</button>
+                <button onclick="executePromptChain()">Execute Chain</button>
+                <div class="output" id="chainOutput"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTab = 'home';
+        let charts = {};
+        let promptBlockCount = 0;
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            currentTab = tabName;
+            
+            if (tabName === 'dashboard' && !charts.operations) initDashboardCharts();
+            if (tabName === 'analytics' && !charts.performance) initAnalyticsCharts();
+        }
+
+        function executePrompt() {
+            const input = document.getElementById('promptInput').value;
+            const output = document.getElementById('promptOutput');
+            if (!input) { output.textContent = 'Please enter a prompt'; return; }
+            output.innerHTML = '<div class="spinner"></div>';
+            setTimeout(() => {
+                output.textContent = 'The advancement of AI technology revolutionizes information interaction. Modern AI systems combine on-device processing for privacy with cloud capabilities for complex reasoning. This hybrid approach ensures optimal performance while maintaining user privacy and security.';
+            }, 1200);
+        }
+
+        function executeSummarizer() {
+            const input = document.getElementById('summarizerInput').value;
+            const output = document.getElementById('summarizerOutput');
+            const length = document.getElementById('summaryLength').value;
+            if (!input) { output.textContent = 'Please enter text'; return; }
+            output.innerHTML = '<div class="spinner"></div>';
+            setTimeout(() => {
+                const summaries = {
+                    short: 'Key points extracted and condensed into essential information.',
+                    medium: 'The text discusses important concepts with detailed analysis. Key findings show significant insights.',
+                    long: 'Comprehensive analysis covering multiple perspectives and providing in-depth exploration of the subject matter with practical applications.'
+                };
+                output.textContent = summaries[length];
+            }, 1000);
+        }
+
+        function executeTranslator() {
+            const input = document.getElementById('translatorInput').value;
+            const output = document.getElementById('translatorOutput');
+            const lang = document.getElementById('targetLanguage').value;
+            if (!input) { output.textContent = 'Please enter text'; return; }
+            output.innerHTML = '<div class="spinner"></div>';
+            setTimeout(() => {
+                const translations = {
+                    es: 'Hola, esta es la traducción al español.',
+                    fr: 'Bonjour, ceci est la traduction française.',
+                    de: 'Hallo, dies ist die deutsche Übersetzung.',
+                    ja: 'こんにちは、これは日本語訳です。',
+                    zh: '你好，这是中文翻译。'
+                };
+                output.textContent = translations[lang];
+            }, 900);
+        }
+
+        function executeWriter() {
+            const input = document.getElementById('writerContext').value;
+            const output = document.getElementById('writerOutput');
+            const tone = document.getElementById('writerTone').value;
+            if (!input) { output.textContent = 'Please enter context'; return; }
+            output.innerHTML = '<div class="spinner"></div>';
+            setTimeout(() => {
+                const content = {
+                    professional: 'This topic represents significant opportunity for growth and innovation. Strategic implementation can lead to measurable improvements in efficiency.',
+                    casual: 'This is actually pretty interesting when you think about it. The whole idea could really make a difference.',
+                    creative: 'Imagine possibilities stretching beyond the horizon, where innovation dances with imagination and transforms the ordinary.',
+                    technical: 'Implementation involves multi-layered architecture utilizing modern frameworks with O(log n) complexity ensuring optimal performance.'
+                };
+                output.textContent = content[tone];
+            }, 1100);
+        }
+
+        function executeProofreader() {
+            const input = document.getElementById('proofreaderInput').value;
+            const output = document.getElementById('proofreaderOutput');
+            if (!input) { output.textContent = 'Please enter text'; return; }
+            output.innerHTML = '<div class="spinner"></div>';
+            setTimeout(() => {
+                output.textContent = 'Grammar: No errors\nSpelling: Correct\nStyle: Consider more active voice\nClarity: Excellent\nScore: 95/100';
+            }, 1000);
+        }
+
+        function executeRewriter() {
+            const input = document.getElementById('rewriterInput').value;
+            const output = document.getElementById('rewriterOutput');
+            const goal = document.getElementById('rewriteGoal').value;
+            if (!input) { output.textContent = 'Please enter text'; return; }
+            output.innerHTML = '<div class="spinner"></div>';
+            setTimeout(() => {
+                const rewrites = {
+                    improve: 'Enhanced version with improved clarity and better flow that captures the essence.',
+                    simplify: 'Simple clear version that gets the point across quickly.',
+                    formalize: 'Professionally restructured text maintaining appropriate formal tone.',
+                    shorten: 'Concise version capturing key points.'
+                };
+                output.textContent = rewrites[goal];
+            }, 1000);
+        }
+
+        function optimizeSQL() {
+            const query = document.getElementById('sqlQuery').value;
+            const output = document.getElementById('sqlResults');
+            output.innerHTML = '<div class="spinner"></div>';
+            setTimeout(() => {
+                output.innerHTML = `<div class="recommendation-item"><strong>Issue:</strong> SELECT * scans all columns. Specify needed columns.</div>
+                <div class="recommendation-item"><strong>Issue:</strong> Missing LIMIT clause increases cost.</div>
+                <div class="recommendation-item"><strong>Suggestion:</strong> Add WHERE filter to reduce data scanned.</div>
+                <div style="margin-top:15px;"><strong>Estimated Improvement:</strong> 40% faster, $15 cost reduction</div>`;
+            }, 1200);
+        }
+
+        function analyzeDevOps() {
+            const code = document.getElementById('devopsCode').value;
+            const type = document.getElementById('configType').value;
+            const output = document.getElementById('devopsResults');
+            output.innerHTML = '<div class="spinner"></div>';
+            setTimeout(() => {
+                output.innerHTML = `<div class="recommendation-item"><strong>Security:</strong> Add service account with minimal permissions</div>
+                <div class="recommendation-item"><strong>Performance:</strong> Use n1-standard-2 for better cost/performance ratio</div>
+                <div class="recommendation-item"><strong>Best Practice:</strong> Enable automatic restart and health checks</div>
+                <div style="margin-top:15px;"><strong>Issues Found:</strong> 3 | <strong>Security Score:</strong> 78/100</div>`;
+            }, 1400);
+        }
+
+        function addPromptBlock() {
+            promptBlockCount++;
+            const container = document.getElementById('promptBlocks');
+            const block = document.createElement('div');
+            block.className = 'prompt-block';
+            block.innerHTML = `<textarea placeholder="Prompt block ${promptBlockCount}..." style="margin-bottom:5px;"></textarea>
+                <button onclick="this.parentElement.remove()" style="background:#ef4444;">Remove</button>`;
+            container.appendChild(block);
+        }
+
+        function executePromptChain() {
+            const blocks = document.querySelectorAll('#promptBlocks textarea');
+            const output = document.getElementById('chainOutput');
+            if (blocks.length === 0) { output.textContent = 'Add prompt blocks first'; return; }
+            output.innerHTML = '<div class="spinner"></div>';
+            setTimeout(() => {
+                output.textContent = `Executed ${blocks.length} prompt blocks in sequence. Results synthesized from multi-step processing with each block contributing to the final output.`;
+            }, 1500);
+        }
+
+        function initDashboardCharts() {
+            charts.operations = new Chart(document.getElementById('operationsChart'), {
+                type: 'line',
+                data: {
+                    labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+                    datasets: [{
+                        label: 'On-Device', data: [45, 52, 68, 82, 95, 88, 76], borderColor: '#3b82f6', tension: 0.4
+                    }, {
+                        label: 'Cloud', data: [15, 18, 22, 28, 32, 29, 25], borderColor: '#8b5cf6', tension: 0.4
+                    }]
+                },
+                options: { responsive: true, plugins: { title: { display: true, text: 'Operations Timeline' } } }
+            });
+
+            charts.distribution = new Chart(document.getElementById('distributionChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['On-Device', 'Cloud', 'Hybrid'],
+                    datasets: [{ data: [65, 25, 10], backgroundColor: ['#3b82f6', '#8b5cf6', '#10b981'] }]
+                },
+                options: { responsive: true, plugins: { title: { display: true, text: 'Processing Distribution' } } }
+            });
+
+            charts.apiUsage = new Chart(document.getElementById('apiUsageChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Prompt', 'Summarizer', 'Translator', 'Writer', 'Proofreader', 'Rewriter'],
+                    datasets: [{ data: [245, 189, 156, 123, 98, 87], backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#8b5cf6', '#ef4444', '#06b6d4'] }]
+                },
+                options: { responsive: true, plugins: { title: { display: true, text: 'API Usage' }, legend: { display: false } } }
+            });
+        }
+
+        function initAnalyticsCharts() {
+            charts.performance = new Chart(document.getElementById('performanceChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{ label: 'Response Time (ms)', data: [650, 720, 680, 590, 640, 710, 675], borderColor: '#3b82f6', tension: 0.4 }]
+                },
+                options: { responsive: true, plugins: { title: { display: true, text: 'Performance Metrics' } } }
+            });
+
+            charts.cost = new Chart(document.getElementById('costChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    datasets: [
+                        { label: 'Savings', data: [285, 312, 298, 352], backgroundColor: '#10b981' },
+                        { label: 'Costs', data: [18, 22, 21, 28], backgroundColor: '#ef4444' }
+                    ]
+                },
+                options: { responsive: true, plugins: { title: { display: true, text: 'Cost Analysis' } } }
+            });
+
+            charts.efficiency = new Chart(document.getElementById('efficiencyChart'), {
+                type: 'radar',
+                data: {
+                    labels: ['Speed', 'Accuracy', 'Privacy', 'Cost', 'Offline'],
+                    datasets: [{ data: [95, 98, 100, 92, 85], borderColor: '#8b5cf6', backgroundColor: 'rgba(139, 92, 246, 0.2)' }]
+                },
+                options: { responsive: true, plugins: { title: { display: true, text: 'Efficiency Metrics' } } }
+            });
+        }
+
+        setInterval(() => {
+            document.getElementById('totalOps').textContent = Math.floor(1200 + Math.random() * 100);
+            document.getElementById('avgTime').textContent = (0.6 + Math.random() * 0.3).toFixed(1) + 's';
+            document.getElementById('savings').textContent = '$' + (1200 + Math.floor(Math.random() * 200));
+        }, 5000);
+    </script>
+</body>
+</html>

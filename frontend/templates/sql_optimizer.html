@@ -1,0 +1,94 @@
+<!-- ============================================
+     frontend/templates/sql_optimizer.html
+     ============================================ -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Optimizer - NYRA</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1 class="logo-text">NYRA</h1>
+                    <p class="logo-subtitle">SQL Optimizer</p>
+                </div>
+                <nav class="navigation">
+                    <a href="/" class="nav-link">Home</a>
+                    <a href="/dashboard" class="nav-link">Dashboard</a>
+                    <a href="/analytics" class="nav-link">Analytics</a>
+                    <a href="/prompt-builder" class="nav-link">Prompt Builder</a>
+                </nav>
+            </div>
+        </header>
+
+        <section class="dashboard-hero">
+            <h2>SQL Query Optimizer</h2>
+            <p>Analyze and optimize BigQuery SQL queries with AI-powered suggestions</p>
+        </section>
+
+        <section style="background: white; padding: 2rem; border-radius: 1rem; margin: 2rem 0;">
+            <h3 style="margin-bottom: 1.5rem;">Enter SQL Query</h3>
+            
+            <div class="sql-editor">
+                <textarea 
+                    id="sqlQuery" 
+                    placeholder="SELECT * FROM your_table WHERE..."
+                    style="width: 100%; min-height: 200px; background: #1e293b; border: none; color: #e2e8f0; font-family: monospace; font-size: 14px; padding: 1rem; border-radius: 0.5rem;"
+                >SELECT *
+FROM users
+WHERE created_at > '2024-01-01'
+ORDER BY created_at DESC</textarea>
+            </div>
+            
+            <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                <button 
+                    onclick="optimizeSQL()" 
+                    style="padding: 0.75rem 2rem; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border: none; border-radius: 0.5rem; font-weight: 600; cursor: pointer;"
+                >
+                    Analyze & Optimize
+                </button>
+                <button 
+                    onclick="document.getElementById('sqlQuery').value = ''" 
+                    style="padding: 0.75rem 2rem; background: #64748b; color: white; border: none; border-radius: 0.5rem; font-weight: 600; cursor: pointer;"
+                >
+                    Clear
+                </button>
+            </div>
+        </section>
+
+        <section id="optimizationResults" style="margin: 2rem 0;">
+            <!-- Results will appear here -->
+        </section>
+
+        <section style="background: white; padding: 2rem; border-radius: 1rem; margin: 2rem 0;">
+            <h3 style="margin-bottom: 1rem;">Optimization Features</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                <div style="padding: 1rem; background: #f8fafc; border-radius: 0.5rem;">
+                    <h4 style="color: #3b82f6; margin-bottom: 0.5rem;">Performance Analysis</h4>
+                    <p style="font-size: 0.875rem; color: #64748b;">Identify slow queries and bottlenecks</p>
+                </div>
+                <div style="padding: 1rem; background: #f8fafc; border-radius: 0.5rem;">
+                    <h4 style="color: #10b981; margin-bottom: 0.5rem;">Cost Optimization</h4>
+                    <p style="font-size: 0.875rem; color: #64748b;">Reduce BigQuery processing costs</p>
+                </div>
+                <div style="padding: 1rem; background: #f8fafc; border-radius: 0.5rem;">
+                    <h4 style="color: #8b5cf6; margin-bottom: 0.5rem;">Best Practices</h4>
+                    <p style="font-size: 0.875rem; color: #64748b;">Follow SQL optimization guidelines</p>
+                </div>
+                <div style="padding: 1rem; background: #f8fafc; border-radius: 0.5rem;">
+                    <h4 style="color: #f59e0b; margin-bottom: 0.5rem;">Smart Suggestions</h4>
+                    <p style="font-size: 0.875rem; color: #64748b;">AI-powered query improvements</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

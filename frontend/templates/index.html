@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NYRA - Neural Yielding Resilient Assistant</title>
+    <link rel="stylesheet" href="../static/css/main.css">
+    <link rel="stylesheet" href="../static/css/components.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1 class="logo-text">NYRA</h1>
+                    <p class="logo-subtitle">Neural Yielding Resilient Assistant</p>
+                </div>
+                <nav class="navigation">
+                    <a href="index.html" class="nav-link active">Home</a>
+                    <a href="dashboard.html" class="nav-link">Dashboard</a>
+                    <a href="analytics.html" class="nav-link">Analytics</a>
+                    <a href="prompt-builder.html" class="nav-link">Prompt Builder</a>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h2 class="hero-title">Hybrid AI for Privacy-First Intelligence</h2>
+                <p class="hero-description">
+                    Combining on-device Gemini Nano with cloud-powered Gemini Pro for
+                    secure, resilient, and intelligent assistance
+                </p>
+                <div class="hero-features">
+                    <div class="feature-badge">On-Device AI</div>
+                    <div class="feature-badge">Offline Capable</div>
+                    <div class="feature-badge">Privacy First</div>
+                    <div class="feature-badge">Multi-Agent</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Tools Grid -->
+        <section class="tools-section">
+            <h3 class="section-title">AI-Powered Tools</h3>
+            
+            <div class="tools-grid">
+                <!-- Prompt API Tool -->
+                <div class="tool-card" data-tool="prompt">
+                    <div class="tool-header">
+                        <h4 class="tool-title">Prompt API</h4>
+                        <span class="tool-status online">Active</span>
+                    </div>
+                    <p class="tool-description">
+                        Generate intelligent text completions using on-device Gemini Nano
+                    </p>
+                    <div class="tool-input-section">
+                        <textarea 
+                            class="tool-input" 
+                            id="promptInput" 
+                            placeholder="Enter your prompt here..."
+                            rows="3"
+                        ></textarea>
+                        <button class="tool-button" onclick="executePrompt()">
+                            Generate
+                        </button>
+                    </div>
+                    <div class="tool-output" id="promptOutput"></div>
+                    <div class="tool-stats">
+                        <span class="stat-item">Model: Gemini Nano</span>
+                        <span class="stat-item">Processing: Local</span>
+                    </div>
+                </div>
+
+                <!-- Summarizer Tool -->
+                <div class="tool-card" data-tool="summarizer">
+                    <div class="tool-header">
+                        <h4 class="tool-title">Summarizer API</h4>
+                        <span class="tool-status online">Active</span>
+                    </div>
+                    <p class="tool-description">
+                        Intelligent text summarization with customizable length
+                    </p>
+                    <div class="tool-input-section">
+                        <textarea 
+                            class="tool-input" 
+                            id="summarizerInput" 
+                            placeholder="Paste text to summarize..."
+                            rows="3"
+                        ></textarea>
+                        <select class="tool-select" id="summaryLength">
+                            <option value="short">Short</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="long">Long</option>
+                        </select>
+                        <button class="tool-button" onclick="executeSummarizer()">
+                            Summarize
+                        </button>
+                    </div>
+                    <div class="tool-output" id="summarizerOutput"></div>
+                    <div class="tool-stats">
+                        <span class="stat-item">Compression: 70%</span>
+                        <span class="stat-item">Speed: Instant</span>
+                    </div>
+                </div>
+
+                <!-- Translator Tool -->
+                <div class="tool-card" data-tool="translator">
+                    <div class="tool-header">
+                        <h4 class="tool-title">Translator API</h4>
+                        <span class="tool-status online">Active</span>
+                    </div>
+                    <p class="tool-description">
+                        Offline-capable translation supporting 10+ languages
+                    </p>
+                    <div class="tool-input-section">
+                        <textarea 
+                            class="tool-input" 
+                            id="translatorInput" 
+                            placeholder="Enter text to translate..."
+                            rows="3"
+                        ></textarea>
+                        <div class="translator-controls">
+                            <select class="tool-select" id="targetLanguage">
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                                <option value="de">German</option>
+                                <option value="ja">Japanese</option>
+                                <option value="zh">Chinese</option>
+                            </select>
+                            <button class="tool-button" onclick="executeTranslator()">
+                                Translate
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tool-output" id="translatorOutput"></div>
+                    <div class="tool-stats">
+                        <span class="stat-item">Offline: Yes</span>
+                        <span class="stat-item">Languages: 10+</span>
+                    </div>
+                </div>
+
+                <!-- Writer Tool -->
+                <div class="tool-card" data-tool="writer">
+                    <div class="tool-header">
+                        <h4 class="tool-title">Writer API</h4>
+                        <span class="tool-status online">Active</span>
+                    </div>
+                    <p class="tool-description">
+                        AI-assisted content creation with tone control
+                    </p>
+                    <div class="tool-input-section">
+                        <input 
+                            type="text" 
+                            class="tool-input" 
+                            id="writerContext" 
+                            placeholder="What would you like to write about?"
+                        />
+                        <select class="tool-select" id="writerTone">
+                            <option value="professional">Professional</option>
+                            <option value="casual">Casual</option>
+                            <option value="creative">Creative</option>
+                            <option value="technical">Technical</option>
+                        </select>
+                        <button class="tool-button" onclick="executeWriter()">
+                            Write
+                        </button>
+                    </div>
+                    <div class="tool-output" id="writerOutput"></div>
+                    <div class="tool-stats">
+                        <span class="stat-item">Tones: 4</span>
+                        <span class="stat-item">Quality: High</span>
+                    </div>
+                </div>
+
+                <!-- Proofreader Tool -->
+                <div class="tool-card" data-tool="proofreader">
+                    <div class="tool-header">
+                        <h4 class="tool-title">Proofreader API</h4>
+                        <span class="tool-status online">Active</span>
+                    </div>
+                    <p class="tool-description">
+                        Grammar, spelling, and style checking
+                    </p>
+                    <div class="tool-input-section">
+                        <textarea 
+                            class="tool-input" 
+                            id="proofreaderInput" 
+                            placeholder="Paste text to proofread..."
+                            rows="3"
+                        ></textarea>
+                        <button class="tool-button" onclick="executeProofreader()">
+                            Check
+                        </button>
+                    </div>
+                    <div class="tool-output" id="proofreaderOutput"></div>
+                    <div class="tool-stats">
+                        <span class="stat-item">Checks: 3</span>
+                        <span class="stat-item">Accuracy: 95%</span>
+                    </div>
+                </div>
+
+                <!-- Rewriter Tool -->
+                <div class="tool-card" data-tool="rewriter">
+                    <div class="tool-header">
+                        <h4 class="tool-title">Rewriter API</h4>
+                        <span class="tool-status online">Active</span>
+                    </div>
+                    <p class="tool-description">
+                        Intelligent text rewriting and paraphrasing
+                    </p>
+                    <div class="tool-input-section">
+                        <textarea 
+                            class="tool-input" 
+                            id="rewriterInput" 
+                            placeholder="Enter text to rewrite..."
+                            rows="3"
+                        ></textarea>
+                        <select class="tool-select" id="rewriteGoal">
+                            <option value="improve">Improve</option>
+                            <option value="simplify">Simplify</option>
+                            <option value="formalize">Formalize</option>
+                            <option value="shorten">Shorten</option>
+                        </select>
+                        <button class="tool-button" onclick="executeRewriter()">
+                            Rewrite
+                        </button>
+                    </div>
+                    <div class="tool-output" id="rewriterOutput"></div>
+                    <div class="tool-stats">
+                        <span class="stat-item">Goals: 4</span>
+                        <span class="stat-item">Variations: 3</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Advanced Features Section -->
+        <section class="advanced-section">
+            <h3 class="section-title">Advanced Capabilities</h3>
+            
+            <div class="advanced-grid">
+                <div class="advanced-card">
+                    <h4 class="advanced-title">SQL Optimizer</h4>
+                    <p class="advanced-description">
+                        BigQuery query optimization with cost estimation
+                    </p>
+                    <a href="/sql-optimizer" class="advanced-link">
+                        Open Tool →
+                    </a>
+                </div>
+
+                <div class="advanced-card">
+                    <h4 class="advanced-title">DevOps Analyzer</h4>
+                    <p class="advanced-description">
+                        Terraform, Kubernetes, Docker configuration analysis
+                    </p>
+                    <a href="/devops-analyzer" class="advanced-link">
+                        Open Tool →
+                    </a>
+                </div>
+
+                <div class="advanced-card">
+                    <h4 class="advanced-title">Multi-Agent System</h4>
+                    <p class="advanced-description">
+                        Orchestrated AI agents for complex workflows
+                    </p>
+                    <button class="advanced-link" onclick="showMultiAgent()">
+                        Launch →
+                    </button>
+                </div>
+
+                <div class="advanced-card">
+                    <h4 class="advanced-title">Prompt Chain Builder</h4>
+                    <p class="advanced-description">
+                        Visual prompt engineering and chaining
+                    </p>
+                    <a href="/prompt-builder" class="advanced-link">
+                        Open Tool →
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Statistics Section -->
+        <section class="stats-section">
+            <h3 class="section-title">System Performance</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalRequests">1,247</div>
+                    <div class="stat-label">Total Requests</div>
+                    <div class="stat-trend positive">+12%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avgResponseTime">0.8s</div>
+                    <div class="stat-label">Avg Response Time</div>
+                    <div class="stat-trend positive">-15%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="offlineOps">432</div>
+                    <div class="stat-label">Offline Operations</div>
+                    <div class="stat-trend positive">+8%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="costSaved">$127</div>
+                    <div class="stat-label">Cost Savings</div>
+                    <div class="stat-trend positive">+22%</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>NYRA</h4>
+                    <p>Neural Yielding Resilient Assistant</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Features</h4>
+                    <p>On-Device AI | Cloud Enhancement | Privacy First</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Technology</h4>
+                    <p>Gemini Nano | Gemini Pro | Firebase | BigQuery</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/js/api_client.js"></script>
+    <script src="/static/js/chrome_ai.js"></script>
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
